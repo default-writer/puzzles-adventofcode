@@ -105,10 +105,28 @@ RUN apt-get -y install docker.io
 RUN curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
     && chmod +x /usr/local/bin/docker-compose
 
+###
+### PowerShell
+###
+# Update the list of packages
+RUN apt-get update \
+    && apt-get install -y wget apt-transport-https \
+    && wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb \
+    && dpkg -i packages-microsoft-prod.deb \
+    && apt-get update \
+    && add-apt-repository universe \
+    && apt-get install -y powershell
+
+###
+### Python 3
+###
 RUN apt-get update \
     && export DEBIAN_FRONTEND=noninteractive \
     && apt-get install -y python3 python3-dev python3-pip python3-venv python3-behave pipenv
 
+###
+### Ubuntu 20.04
+###
 RUN ln -s /usr/local/bin/python3 /usr/bin/python & \
     ln -s /usr/local/bin/pip3 /usr/bin/pip
 
