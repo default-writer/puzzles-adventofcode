@@ -2,5 +2,5 @@ import pytest
 
 from src.main import main
 
-def test_1():
-    pass
+def test_main():
+    assert True
