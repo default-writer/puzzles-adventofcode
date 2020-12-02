@@ -108,15 +108,10 @@ RUN curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-c
 ###
 ### PowerShell
 ###
-# Update the list of packages
-RUN apt-get update \
-    && apt-get install -y wget apt-transport-https \
-    && wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb \
-    && dpkg -i packages-microsoft-prod.deb \
-    && apt-get update \
-    && add-apt-repository universe \
-    && apt-get install -y powershell
-
+RUN  wget https://github.com/PowerShell/PowerShell/releases/download/v7.1.0/powershell_7.1.0-1.ubuntu.20.04_amd64.deb -O /tmp/powershell_7.1.0-1.ubuntu.20.04_amd64.deb \
+    && dpkg -i /tmp/powershell_7.1.0-1.ubuntu.20.04_amd64.deb \
+    && apt-get update -f
+    
 ###
 ### Python 3
 ###
