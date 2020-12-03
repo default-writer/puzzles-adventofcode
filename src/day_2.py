@@ -53,3 +53,19 @@ def validate(line):
     if char in histogram.keys():
         return histogram[char] >= min and histogram[char] <= max
     return False
+
+def validate2(line):
+    value = line.split(":")
+    policy = value[0]
+    data = value[1][1:]
+    dict = {}
+    dict[policy] = data
+    rule = policy.split()
+    bounds = rule[0].split('-')
+    min = int(bounds[0])-1
+    max = int(bounds[1])-1
+    char = rule[1]
+    length = len(data)
+    if min < length and max < length:
+        return (data[min] != char and data[max] == char) or (data[min] == char and data[max] != char)
+    return False
