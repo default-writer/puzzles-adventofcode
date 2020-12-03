@@ -38,16 +38,38 @@ To begin, get your puzzle input.
 
 """
 
-def fix_report(number, lines):
-    dict = {}
 
-    for line in lines:
-        value = int(line)
-        if value in dict.keys():
-            return value * dict[value]
-        else:
-            dict[value] = number - value
-            dict[number - value] = value
+def fix_report(number, values, iterator):
+
+    dict = {}
+    value = 0
+    values = iterator(dict, number)
+
+    while True:
+        try:
+            value = next(values)
+            if value in dict.keys():
+                if dict[value] in dict.keys():
+                    if dict[value] + dict[dict[value]] == number:
+                        return (value, dict[value])
+        except StopIteration:
+            break
+
+    return (0, 0)
+
+
+def fix_report2(number, values, iterator):
+
+    dict = {}
+    values = iterator(dict, number)
+
+    while True:
+        try:
+            value = next(values)
+            result = fix_report(number - value, values, iterator)
+            if result is not (0,0):
+                return (value, result[0], result[1])
+        except StopIteration:
+            break
 
     return 0
-    
