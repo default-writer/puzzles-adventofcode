@@ -51,7 +51,7 @@ def fix_report(number, values, iterator):
             if value in dict.keys():
                 if dict[value] in dict.keys():
                     if dict[value] + dict[dict[value]] == number:
-                        return (value, dict[value])
+                        yield (value, dict[value])
         except StopIteration:
             break
 
@@ -63,9 +63,9 @@ def fix_report2(number, values, iterator):
     while True:
         try:
             value = next(values)
-            result = fix_report(number - value, values, iterator)
-            if result:
-                if value + result[0] + result[1] == number:
-                    return (value, result[0], result[1])
+            for result in fix_report(number - value, values, iterator):
+                if result:
+                    if value + result[0] + result[1] == number:
+                        yield (value, result[0], result[1])
         except StopIteration:
             break

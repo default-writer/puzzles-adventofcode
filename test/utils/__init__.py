@@ -1,5 +1,7 @@
 import os
 from os import remove, truncate
+from itertools import accumulate
+import operator
 
 def get_data(file):
     with open(file= os.getcwd() + file, mode="r") as data:
@@ -14,3 +16,12 @@ def iterator(values):
                     yield value
             continue
     return iter
+
+def multiply(values):
+    result = 1
+    for value in values:
+        result *= value
+    return result
+
+def maximum(values):
+    return max([multiply([*value]) for value in values])
