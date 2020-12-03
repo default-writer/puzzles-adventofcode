@@ -32,3 +32,24 @@ How many passwords are valid according to their policies?
 To begin, get your puzzle input.
 
 """
+
+def validate(line):
+    value = line.split(":")
+    policy = value[0]
+    data = value[1][1:]
+    dict = {}
+    dict[policy] = data
+    rule = policy.split()
+    bounds = rule[0].split('-')
+    min = int(bounds[0])
+    max = int(bounds[1])
+    char = rule[1]
+    histogram = {}
+    for ch in data:
+        if ch in histogram.keys():
+            histogram[ch] = histogram[ch] + 1
+        else:
+            histogram[ch] = 1
+    if char in histogram.keys():
+        return histogram[char] >= min and histogram[char] <= max
+    return False

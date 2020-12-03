@@ -2,7 +2,7 @@ from os import environ
 
 from src.day_1 import fix_report, fix_report2
 
-from .utils import get_data, iterator, maximum
+from .utils import get_int_data, iterator, maximum
 
 def test_day_1_part1():
     """
@@ -14,7 +14,7 @@ def test_day_1_part1():
     assert  maximum(result) == 514579
 
 def test_day_1_dataset_part1():
-    values = get_data("/test/data/day_1")
+    values = get_int_data("/test/data/day_1")
     result = list(fix_report(2020, values, iterator(values)))
     assert maximum(result) == 956091
 
@@ -29,6 +29,6 @@ def test_day_1_part2():
 
 
 def test_day_1_dataset_part2():
-    values = get_data("/test/data/day_1")
+    values = get_int_data("/test/data/day_1")
     result = list(fix_report2(2020, values, iterator(values)))
     assert maximum(result) == 79734368
