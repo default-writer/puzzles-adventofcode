@@ -50,7 +50,7 @@ def fix_report(number, values, iterator):
             value = next(values)
             if value in dict.keys():
                 if dict[value] in dict.keys():
-                    if dict[value] + dict[dict[value]] == number:
+                    if value + dict[value] == number:
                         yield (value, dict[value])
         except StopIteration:
             break
