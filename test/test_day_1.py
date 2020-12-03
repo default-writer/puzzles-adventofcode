@@ -11,11 +11,13 @@ def test_fix_day_1():
     """
     values = [int(value) for value in "1721 979 366 299 675 1456".split()]
     result = fix_report(2020, values, iterator(values))
+    assert result
     assert  result[0] * result[1] == 514579
 
 def test_fix_report_day_1():
     values = get_data("/test/data/day_1")
     result = fix_report(2020, values, iterator(values))
+    assert result
     assert result[0] * result[1] == 956091
 
 
@@ -26,4 +28,5 @@ def test_fix_day_2():
     """
     values = [int(value) for value in "1721 979 366 299 675 1456".split()]
     result = fix_report2(2020, values, iterator(values))
+    assert result
     assert result[0] * result[1] * result[2] == 241861950

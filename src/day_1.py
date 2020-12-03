@@ -55,9 +55,6 @@ def fix_report(number, values, iterator):
         except StopIteration:
             break
 
-    return (0, 0)
-
-
 def fix_report2(number, values, iterator):
 
     dict = {}
@@ -67,9 +64,8 @@ def fix_report2(number, values, iterator):
         try:
             value = next(values)
             result = fix_report(number - value, values, iterator)
-            if result is not (0,0):
-                return (value, result[0], result[1])
+            if result:
+                if value + result[0] + result[1] == number:
+                    return (value, result[0], result[1])
         except StopIteration:
             break
-
-    return 0
