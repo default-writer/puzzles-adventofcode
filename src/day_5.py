@@ -76,3 +76,20 @@ def get_maximum_seat_index(lines):
         index = get_seat_index(line)
         indexes.append(index)
     return max(indexes)
+
+def get_your_seat_index(lines):
+    max = get_maximum_seat_index(lines)
+    indexes = []
+    for line in lines:
+        index = get_seat_index(line)
+        indexes.append(max - index)
+    
+    indexes.sort()
+    results = []
+
+    for i in range(len(indexes) - 1):
+        if indexes[i + 1] - indexes[i] > 1:
+            results.append(indexes[i])
+
+    if len(results) == 1:
+        return results[0]
