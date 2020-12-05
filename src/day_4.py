@@ -98,7 +98,7 @@ pid invalid: 0123456789
 
 """
 
-def get_passport_validation_info(data, tags = {}):
+def get_passport_validation_info(data, tags):
 
     try:
         if not get_tags(data, tags):
@@ -106,8 +106,13 @@ def get_passport_validation_info(data, tags = {}):
         
         required_tags = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 
+        # for tag in tags.keys():
+        #     if not tag in required_tags or tags[tag] == "":
+        #         if tag != "cid":
+        #             return False, f"{tag} is missing"
+
         for tag in required_tags:
-            if not tag in tags.keys() or tags[tag] == "":
+            if not tag in tags.keys():
                 return False, f"{tag} is missing"
 
         return True, ""
@@ -115,16 +120,19 @@ def get_passport_validation_info(data, tags = {}):
     except:
         return False, ""
 
-def get_tags(data, tags = {}):
+def get_tags(data, tags):
     try:
         for tag in data.split():
             dt = tag.split(":")
-            name = dt[0].strip()
-            value = dt[1].strip()
+            name = dt[0]
+            value = dt[1]
             tags[name] = value
         return True
     except:
         return False
+
+ecl_types = ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
+num_types = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 
 def get_passport_validation_info2(data):
 
@@ -164,23 +172,23 @@ def get_passport_validation_info2(data):
         hgt_type, hgt_value = get_hgt_type()
 
         if not (byr >= 1920 and byr <= 2002):
-            return False, f"byr is {byr} not in 1920 and 2002"
+            return False, f"byr is {byr} not in 1920 - 2002"
         if not (iyr >= 2010 and iyr <= 2020):
-            return False, f"iyr is {iyr} not in 2010 and 2020"
+            return False, f"iyr is {iyr} not in 2010 - 2020"
         if not (eyr >= 2020 and eyr <= 2030):
-            return False, f"eyr is {eyr} not in 2020 and 2030"
+            return False, f"eyr is {eyr} not in 2020 - 2030"
         if not (hgt_type == "cm" or hgt_type == "in"):
             return False, f"hgt type is {hgt_type} not 'cm' or 'in'"
         if hgt_type == "cm" and not (hgt_value >= 150 and hgt_value <= 193):
-            return False, f"hgt type is {hgt_type} not in 150 and 193"
+            return False, f"hgt type is {hgt_type} not in 150 - 193"
         if hgt_type == "in" and not ( hgt_value >= 59 and hgt_value <= 76):
-            return False, f"hgt type is {hgt_type} not in 59 and 76"
+            return False, f"hgt type is {hgt_type} not in 59 - 76"
         if not (hcl[:1] == "#" and len(hcl[1:]) == 6 and int(hcl[1:], 16)):
             return False, f"hcl is {hcl} not hex"
-        if not (ecl in "blu brn gry grn hzl oth".split()):
-            return False, f"ecl type is {ecl} blu brn gry grn hzl oth"
-        if not (len([ch for ch in pid if ch in "0 1 2 3 4 5 6 7 8 9".split()]) == 9):
-            return False, f"pid is {pid}, not in [000000000] and [999999999]"
+        if not (ecl in ecl_types):
+            return False, f"ecl type is {ecl}, not in {ecl_types}"
+        if not (len([num for num in pid if num in num_types]) == 9):
+            return False, f"pid is {pid}, not in 000000000 - 999999999"
         return True, ""
     except Exception as ex:
         return False, ex.__str__()
