@@ -7,9 +7,13 @@ def get_int_data(file):
     with open(file= os.getcwd() + file, mode="r") as data:
        return [int(line[:-1]) for line in data.readlines()]
 
-def get_raw_data(file):
+def get_lines_data(file):
     with open(file= os.getcwd() + file, mode="r") as data:
        return [line[:-1] for line in data.readlines()]
+
+def get_raw_data(file):
+    with open(file= os.getcwd() + file, mode="r") as data:
+       return data.read()
             
 def iterator(values):
     def iter(dict, number):
