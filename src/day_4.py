@@ -106,10 +106,10 @@ def get_passport_validation_info(data, tags):
         
         required_tags = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 
-        # for tag in tags.keys():
-        #     if not tag in required_tags or tags[tag] == "":
-        #         if tag != "cid":
-        #             return False, f"{tag} is missing"
+        for tag in tags.keys():
+            if not tag in required_tags or tags[tag] == "":
+                if tag != "cid":
+                    return False, f"{tag} is not defined"
 
         for tag in required_tags:
             if not tag in tags.keys():
@@ -181,7 +181,7 @@ def get_passport_validation_info2(data):
             return False, f"hgt type is {hgt_type} not 'cm' or 'in'"
         if hgt_type == "cm" and not (hgt_value >= 150 and hgt_value <= 193):
             return False, f"hgt type is {hgt_type} not in 150 - 193"
-        if hgt_type == "in" and not ( hgt_value >= 59 and hgt_value <= 76):
+        if hgt_type == "in" and not (hgt_value >= 59 and hgt_value <= 76):
             return False, f"hgt type is {hgt_type} not in 59 - 76"
         if not (hcl[:1] == "#" and len(hcl[1:]) == 6 and int(hcl[1:], 16)):
             return False, f"hcl is {hcl} not hex"
