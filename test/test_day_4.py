@@ -1,11 +1,6 @@
-
 from src.day_4 import get_passport_validation_info, get_passport_validation_info2
 
 from .utils import get_raw_data
-
-import logging
-
-logger = logging.getLogger(__name__)
 
 def test_day_4_part1():
     lines = """ecl:gry pid:860033327 eyr:2020 hcl:#fffffd

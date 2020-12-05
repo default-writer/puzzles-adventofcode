@@ -1,5 +1,3 @@
-from os import environ
-
 from src.day_1 import fix_report, fix_report2
 
 from .utils import get_int_data, iterator, maximum

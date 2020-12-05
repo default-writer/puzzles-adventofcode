@@ -1,4 +1,3 @@
-
 from src.day_2 import validate, validate2
 
 from .utils import get_lines_data
