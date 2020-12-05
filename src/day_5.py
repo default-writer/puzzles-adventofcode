@@ -55,7 +55,7 @@ To begin, get your puzzle input.
 
 """
 
-def get_index(array, min, max):
+def get_id(array, min, max):
     for a in array:
         if a == 1:
             min = min + (max - min) / 2
@@ -63,33 +63,41 @@ def get_index(array, min, max):
             max = max - (max - min) / 2
     return int(min)
 
-def get_seat_index(data):
+def get_seat_id(data, matrix, w, h):
     head =  data[:7]
     tail = data[7:]
     head = [0 if n == "F" else 1 for n in head]
     tail = [0 if n == "L" else 1 for n in tail]
-    return 8 * get_index(head, 0, 128) + get_index(tail, 0, 8)
+    row = get_id(head, 0, w) 
+    col = get_id(tail, 0, h)
+    matrix[row][col] = 1
+    return h * row + col
 
-def get_maximum_seat_index(lines):
+def get_maximum_seat_id(lines):
     indexes = []
+    w, h = 128, 8
+    matrix = [[0 for y in range(h)] for x in range(w)] 
     for line in lines:
-        index = get_seat_index(line)
+        index = get_seat_id(line, matrix, w, h)
         indexes.append(index)
     return max(indexes)
 
-def get_your_seat_index(lines):
-    max = get_maximum_seat_index(lines)
-    indexes = []
+def get_your_seat_id(lines):
+    max = get_maximum_seat_id(lines)
+    w, h = 128, 8
+    matrix = [[0 for y in range(h)] for x in range(w)] 
+    ids = []
     for line in lines:
-        index = get_seat_index(line)
-        indexes.append(max - index)
+        id = get_seat_id(line, matrix, w, h)
+        ids.append(id)
     
-    indexes.sort()
     results = []
 
-    for i in range(len(indexes) - 1):
-        if indexes[i + 1] - indexes[i] > 1:
-            results.append(indexes[i])
+    for i in range(w):
+        for j in range(1,h - 1):
+            id = matrix[i][j]
+            if id == 0 and matrix[i][j+1] == 1 and matrix[i][j-1] == 1:
+                results.append(8 * i + j)
 
     if len(results) == 1:
         return results[0]
