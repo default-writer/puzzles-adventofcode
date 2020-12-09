@@ -70,8 +70,6 @@ def get_rules(rules, input):
     line_rules = input.split("\n")
     for line_rule in line_rules:
         rule = line_rule_regex.match(line_rule)
-        if len(rule.groups()) == 0:
-            raise ValueError()             
         if not rule.group(1) in rules.keys():
             rules[rule.group(1)] = {}
         index = 3
@@ -90,7 +88,6 @@ def get_rules_by_name(rules, rule, colors):
 def get_bags_by_name(rules, current):
     counter = 0
     for rule in rules[current].keys():
-        print(f"  {current}: {{ {current} -> {rules[current][rule]} }}")
         counter += int(rules[current][rule]) * (get_bags_by_name(rules, rule) + 1)
     print(f"{current} bags contain {counter} bags.")
     return counter
