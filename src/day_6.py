@@ -85,6 +85,7 @@ def get_counter_for_group(group):
     return counter
 
 def get_counter_for_group2(group):
+    max_count = len(group)
     counter = 0
     results = {}
     for line in group:
@@ -93,8 +94,6 @@ def get_counter_for_group2(group):
                 results[ch] = 1
             else:
                 results[ch] += 1
-    max_count = len(group)
-    counter = 0
     for ch in results.keys():
         if results[ch] == max_count:
             counter += 1
