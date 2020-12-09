@@ -15,6 +15,13 @@ def get_raw_data(file):
     with open(file= os.getcwd() + file, mode="r") as data:
        return data.read()
             
+def get_line_groups(file):
+    with open(file= os.getcwd() + file, mode="r") as data:
+        lines = data.read()
+        line_groups = lines.split("\n\n")
+        for line_group in line_groups:
+            yield line_group.split("\n")
+
 def iterator(values):
     def iter(dict, number):
         for value in values:
