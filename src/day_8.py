@@ -58,36 +58,75 @@ Run your copy of the boot code. Immediately before any instruction is executed a
 what value is in the accumulator?
 
 To begin, get your puzzle input.
+
+--- Part Two ---
+After some careful analysis, you believe that exactly one instruction is corrupted.
+
+Somewhere in the program, either a jmp is supposed to be a nop, or a nop is supposed to be a jmp. 
+(No acc instructions were harmed in the corruption of this boot code.)
+
+The program is supposed to terminate by attempting to execute an instruction immediately after the last 
+instruction in the file. By changing exactly one jmp or nop, you can repair the boot code and make it 
+terminate correctly.
+
+For example, consider the same program from above:
+
+nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6
+If you change the first instruction from nop +0 to jmp +0, it would create a single-instruction infinite loop, never leaving that instruction. If you change almost any of the jmp instructions, the program will still eventually find another jmp instruction and loop forever.
+
+However, if you change the second-to-last instruction (from jmp -4 to nop -4), the program terminates! The instructions are visited in this order:
+
+nop +0  | 1
+acc +1  | 2
+jmp +4  | 3
+acc +3  |
+jmp -3  |
+acc -99 |
+acc +1  | 4
+nop -4  | 5
+acc +6  | 6
+After the last instruction (acc +6), the program terminates by attempting to run the instruction below the last instruction in the file. With this change, after the program terminates, the accumulator contains the value 8 (acc +1, acc +1, acc +6).
+
+Fix the program so that it terminates normally by changing exactly one jmp (to nop) or nop (to jmp). What is the value of the accumulator after the program terminates?
 """
 
 import re
 
+from copy import deepcopy
+
 def iterator(memory, registers):
     def tick(program):
-        address = 0
-        while True:
-            instruction = program[address]
-            if address in memory.keys():
+        program_length = len(program)
+        while registers["ip"] >= 0 and registers["ip"] < program_length:
+            instruction = program[registers["ip"]]
+            if registers["ip"] in memory.keys():
                 break
-            memory[address] = instruction
+            memory[registers["ip"]] = instruction
             yield instruction
             if instruction[0] == "nop":
-                address += 1
+                registers["ip"] += 1
                 continue
             if instruction[0] == "jmp":
-                address += instruction[1]
+                registers["ip"] += instruction[1]
                 continue
             if instruction[0] == "acc":
-                address += 1
-                registers["acc"] += instruction[1]
+                registers["ip"] += 1
+                registers["ax"] += instruction[1]
                 continue
     return tick
 
 
-def get_accumulator_value(program):
-    memory = {}
-    registers = {}
-    registers["acc"] = 0
+def execute(program, memory, registers):
+    registers["ip"] = 0
+    registers["ax"] = 0
     cpu = iterator(memory, registers)
     instructions = cpu(program)
     while True:
@@ -96,16 +135,36 @@ def get_accumulator_value(program):
             print(instruction)
         except StopIteration:
             break
-    return registers["acc"]
-    
-def get_program(input, program):
+ 
+def fix_program(program):
+    def patch(intruction)->bool:
+        if instruction[0] == "jmp":
+            instruction[0] = "nop"
+            return True
+        elif instruction[0] == "nop":
+            instruction[0] = "jmp"
+            return True
+        return False
+    result = []
+    for instruction in program:
+        memory = {}
+        if patch(instruction):
+            memory = {}
+            registers = {}
+            execute(program, memory, registers)
+            if registers["ip"] == len(program):
+                result.append(registers["ax"])
+            patch(instruction)
+    return max(result)
+
+
+def get_program(input):
+    program = []
     full_regex = r"(acc|jmp|nop) (?:(\+|\-){0,1})?(\d+)"
     line_rule_regex = re.compile(full_regex)
     line_rules = input.split("\n")
-    address = 0
     for line_rule in line_rules:
         rule = line_rule_regex.match(line_rule)
         instruction = [rule.group(1), int(rule.group(2) + rule.group(3))]
         program.append(instruction)
-        address += 1
     return program
